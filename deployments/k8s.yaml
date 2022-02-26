@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: koc-serviceaccount
+  namespace: ns-personal-shibmish
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: koc-role
+  namespace: ns-personal-shibmish
+rules:
+  - apiGroups:
+      - "" # "" indicates the core API group
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - watch
+      - list
+      - create
+      - update
+      - patch
+      - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: koc-rolebinding
+  namespace: ns-personal-shibmish
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: koc-role
+subjects:
+  - kind: ServiceAccount
+    name: koc-serviceaccount
+    namespace: ns-personal-shibmish
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: koc
+  namespace: ns-personal-shibmish
+  labels:
+    app: koc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: koc
+  template:
+    metadata:
+      labels:
+        app: koc
+    spec:
+      serviceAccountName: koc-serviceaccount
+      containers:
+        - name: koc-cont
+          image: registry.gitlab.com/shib1000/koc:v5
+          ports:
+            - containerPort: 8080
+          env:
+            - name: WORKER_NS
+              value: ns-personal-shibmish

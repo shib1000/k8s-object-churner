@@ -1,0 +1,4 @@
+app:
+  name: koc
+  server:
+    port: 8080
