@@ -64,3 +64,9 @@ spec:
           env:
             - name: WORKER_NS
               value: ns-personal-shibmish
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 30
