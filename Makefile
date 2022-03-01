@@ -2,10 +2,10 @@ SHELL := /bin/bash
 # $(shell git rev-parse --short HEAD)
 VERSION := 1.0
 ver ?= v1
-run:
+run: tidy
 	export WORKER_NS=ns-personal-shibmish; go run cmd/k8s-object-churner/main.go
 
-build:
+build: tidy
 	go build -o bin/koc cmd/k8s-object-churner/main.go
 
 docker:
@@ -37,3 +37,11 @@ tidy:
 
 test:
 	go test ./... -count=1
+
+# ==============================================================================
+# Install on k8s cluster
+k8s-install:
+	kubectl apply -f deployments/k8s.yaml
+
+k8s-uninstall:
+	kubectl delete -f deployments/k8s.yaml
