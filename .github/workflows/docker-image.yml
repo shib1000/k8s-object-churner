@@ -18,7 +18,7 @@ jobs:
       run: make test
       
   build:
-
+    needs: [test]
     runs-on: ubuntu-latest
 
     steps:
