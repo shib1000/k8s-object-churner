@@ -17,6 +17,8 @@ docker-run:
 docker-release:
 	docker build -t koc-release -f Dockerfile-release .
 	docker tag koc-release registry.gitlab.com/shib1000/koc:$(ver)
+
+docker-push:
 	docker push registry.gitlab.com/shib1000/koc:$(ver)
 
 down:
